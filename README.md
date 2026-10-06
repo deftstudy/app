@@ -1,2 +1,2 @@
-# defsec
-DEFSEC. estude programação!
+# deftstudy
+deftstudy. estude programação!
