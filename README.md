@@ -21,12 +21,12 @@ Sempre que você usar uma classe nova do Tailwind, rode o build de novo antes do
 ```
 deftstudy/
 ├── index.html          # estrutura da página (busca fixa no topo)
-├── css/style.css       # fundo, cursor piscando, foco do teclado
-├── css/tailwind.css    # GERADO pelo Tailwind CLI (não edite à mão)
+├── frontend/style.css       # fundo, cursor piscando, foco do teclado
+├── frontend/tailwind.css    # GERADO pelo Tailwind CLI (não edite à mão)
 ├── src/input.css       # entrada do Tailwind (fontes do projeto)
 ├── package.json        # comandos npm run build / npm run css
 ├── data/setores.js     # TODOS os conteúdos ficam aqui
-└── js/
+└── backend/
     ├── busca.js        # filtra por texto e por setor
     ├── render.js       # desenha setores e cartões
     └── main.js         # liga tudo (ponto de entrada)
