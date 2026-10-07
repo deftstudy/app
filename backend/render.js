@@ -1,11 +1,11 @@
 // Desenha na tela: cartões de setor, cabeçalho do setor aberto e cartões de conteúdo.
 // Usa textContent (e não innerHTML) para o texto nunca ser tratado como código.
 
-const ICONES = { video: 'circle-play', repo: 'git-branch', site: 'globe' };
-const ROTULOS = { video: 'Vídeo', repo: 'Repositório', site: 'Site' };
+export const ICONES = { video: 'circle-play', repo: 'git-branch', site: 'globe' };
+export const ROTULOS = { video: 'Vídeo', repo: 'Repositório', site: 'Site' };
 
 // Atalho para criar um elemento com classes e texto
-function criar(tag, classes, texto) {
+export function criar(tag, classes, texto) {
   const el = document.createElement(tag);
   el.className = classes;
   if (texto) el.textContent = texto;
@@ -13,7 +13,7 @@ function criar(tag, classes, texto) {
 }
 
 // Atalho para criar um ícone Lucide (o lucide.createIcons() troca o <i> pelo desenho)
-function criarIcone(nome, classes) {
+export function criarIcone(nome, classes) {
   const icone = document.createElement('i');
   icone.dataset.lucide = nome;
   icone.className = classes;
@@ -22,7 +22,7 @@ function criarIcone(nome, classes) {
 
 // Página inicial: um cartão por setor.
 // Cada cartão é um link para "#id". Clicar muda o endereço e abre o setor.
-function renderSetores(setores) {
+export function renderSetores(setores) {
   const area = document.getElementById('resultados');
   area.replaceChildren();
 
@@ -49,7 +49,7 @@ function renderSetores(setores) {
 }
 
 // Cabeçalho do setor aberto. Chame com null para limpar.
-function renderTopoSetor(setor) {
+export function renderTopoSetor(setor) {
   const topo = document.getElementById('topo-secao');
   topo.replaceChildren();
   if (!setor) return;
@@ -67,7 +67,7 @@ function renderTopoSetor(setor) {
 }
 
 // Cartões de conteúdo (usados dentro de um setor e nos resultados da busca)
-function renderResultados(lista, texto) {
+export function renderResultados(lista, texto) {
   const area = document.getElementById('resultados');
   area.replaceChildren();
 
@@ -85,7 +85,7 @@ function renderResultados(lista, texto) {
 
 // Pega o endereço (src) de dentro do código <iframe> colado em setores.js.
 // Só aceita embeds do YouTube; qualquer outra coisa é ignorada por segurança.
-function extrairSrcYoutube(codigoIframe) {
+export function extrairSrcYoutube(codigoIframe) {
   const achado = /src="([^"]+)"/.exec(codigoIframe || '');
   if (!achado) return null;
   try {
@@ -98,7 +98,7 @@ function extrairSrcYoutube(codigoIframe) {
 }
 
 // Monta o player do YouTube (a prévia do vídeo dentro do cartão)
-function criarPlayer(src, titulo) {
+export function criarPlayer(src, titulo) {
   const player = document.createElement('iframe');
   player.src = src;
   player.title = titulo;
@@ -111,7 +111,7 @@ function criarPlayer(src, titulo) {
   return player;
 }
 
-function criarCartao(item) {
+export function criarCartao(item) {
   const classes = 'block rounded-lg border border-emerald-500/20 bg-slate-900/60 p-4 hover:border-emerald-400/60';
   const srcVideo = extrairSrcYoutube(item.iframe);
 

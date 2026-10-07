@@ -1,6 +1,7 @@
 {
   "name": "deftsec",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "tailwindcss -i ./src/input.css -o ./css/tailwind.css --minify",
     "css": "tailwindcss -i ./src/input.css -o ./css/tailwind.css --watch"

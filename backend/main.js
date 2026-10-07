@@ -1,3 +1,7 @@
+import { SETORES } from '../data/setores.js';
+import { filtrar } from './busca.js';
+import { renderSetores, renderTopoSetor, renderResultados } from './render.js';
+
 // Ponto de entrada: decide o que mostrar e chama as funções de render.js.
 // Quem manda é o endereço da página:
 //   sem #     -> página inicial, com um card por setor
