@@ -21,6 +21,8 @@ Plataforma de estudos de programação: links de vídeos, repositórios e sites 
 | RF11 | Compartilhar uma busca por URL (ex.: `?q=flexbox`)                                                      | Novo     |
 | RF12 | Botão "sugerir conteúdo" que leva a uma issue do GitHub                                                 | Novo     |
 | RF13 | Tela de erro para setor que não existe (`#xyz`)                                                         | Novo     |
+| RF14 | adicionar opção de salvar algo, e criar sessão de salvos na tela inicial                                | Novo     |
+
 
 ## Requisitos não funcionais
 
