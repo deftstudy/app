@@ -1,0 +1,12 @@
+{
+  "name": "deftsec",
+  "private": true,
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./css/tailwind.css --minify",
+    "css": "tailwindcss -i ./src/input.css -o ./css/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4",
+    "tailwindcss": "^4"
+  }
+}

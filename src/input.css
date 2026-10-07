@@ -1,0 +1,9 @@
+/* Entrada do Tailwind. O CLI lê este arquivo e gera css/tailwind.css
+   só com as classes que o projeto realmente usa. */
+@import "tailwindcss";
+
+/* Fontes do projeto: font-mono (títulos e comandos) e font-sans (leitura) */
+@theme {
+  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: Inter, sans-serif;
+}
