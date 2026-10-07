@@ -1,11 +1,13 @@
 import { SETORES } from '../data/setores.js';
 import { filtrar } from './busca.js';
 import { renderSetores, renderTopoSetor, renderResultados } from './render.js';
+import { iniciarConfiguracoes, renderConfiguracoes } from './configuracoes.js';
 
 // Ponto de entrada: decide o que mostrar e chama as funções de render.js.
 // Quem manda é o endereço da página:
 //   sem #     -> página inicial, com um card por setor
 //   #html     -> setor HTML aberto, com os conteúdos dentro
+//   #configuracoes -> tela de configurações
 //   (busca)   -> se tiver texto no campo de busca, mostra os resultados de todos os setores
 
 // Junta os conteúdos de todos os setores numa lista só (usada na busca)
@@ -27,6 +29,11 @@ function atualizar() {
     renderTopoSetor(null);
     renderResultados(lista, texto);
     contador.textContent = `${lista.length} resultado(s) para "${texto}"`;
+  } else if (location.hash === '#configuracoes') {
+    // Tela de configurações (vem de configuracoes.js)
+    renderTopoSetor({ nome: 'Configurações', descricao: 'Preferências do site, salvas só neste navegador.' });
+    renderConfiguracoes();
+    contador.textContent = '';
   } else if (setor) {
     // Setor aberto
     const lista = filtrar(ITENS, { texto: '', setor: setor.id });
@@ -41,7 +48,7 @@ function atualizar() {
   }
 
   // O texto de introdução só aparece na página inicial
-  intro.hidden = Boolean(texto || setor);
+  intro.hidden = Boolean(texto || setor || location.hash === '#configuracoes');
 }
 
 campoBusca.addEventListener('input', atualizar);
@@ -60,4 +67,6 @@ document.addEventListener('keydown', (evento) => {
   }
 });
 
+// Aplica as configurações salvas (ex.: gatinho ligado) ao abrir o site
+iniciarConfiguracoes();
 atualizar();
