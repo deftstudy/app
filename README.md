@@ -11,9 +11,9 @@ Abra o `index.html` no navegador. Não precisa de servidor.
 ```
 deftsec/
 ├── index.html          # estrutura da página (busca fixa no topo)
-├── css/style.css       # fundo, cursor piscando, foco do teclado
+├── style.css       # fundo, cursor piscando, foco do teclado
 ├── data/setores.js     # TODOS os conteúdos ficam aqui
-└── js/
+└── backend/
     ├── busca.js        # filtra por texto e por setor
     ├── render.js       # desenha setores e cartões
     └── main.js         # liga tudo (ponto de entrada)
