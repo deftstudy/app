@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>deftsec - estudos de programação</title>
+    <meta
+      name="description"
+      content="Vídeos, repositórios e sites para estudar programação, organizados por setor." />
+
+    <!-- Tailwind via CDN: bom para começar rápido. Depois dá para trocar pela versão com build. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              mono: ['"JetBrains Mono"', "monospace"],
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fontes: JetBrains Mono (títulos e comandos) e Inter (leitura) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet" />
+
+    <!-- Ícones Lucide -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="min-h-screen bg-slate-950 font-sans text-slate-300">
+    <!-- Barra do topo: marca + busca em estilo terminal. Fica fixa ao rolar a página. -->
+    <header
+      class="sticky top-0 z-10 border-b border-emerald-500/20 bg-slate-950/90 backdrop-blur">
+      <div
+        class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3">
+        <a
+          href="index.html"
+          class="font-mono text-xl font-bold text-emerald-400">
+          deftsec<span class="cursor" aria-hidden="true">_</span>
+        </a>
+
+        <div
+          class="flex min-w-[16rem] flex-1 items-center gap-3 rounded border border-emerald-500/20 bg-black/60 px-3 py-2 font-mono">
+          <span class="text-emerald-400" aria-hidden="true">$</span>
+          <label for="busca" class="sr-only">Buscar conteúdos</label>
+          <input
+            id="busca"
+            type="search"
+            autocomplete="off"
+            placeholder="buscar: flexbox, git, es6... (aperte /)"
+            class="w-full bg-transparent text-sm text-cyan-300 placeholder:text-slate-600 focus:outline-none" />
+        </div>
+      </div>
+    </header>
+
+    <div class="mx-auto max-w-5xl px-4 py-8">
+      <p id="intro" class="mb-6 max-w-xl text-slate-400">
+        Vídeos, repositórios e sites para estudar programação, organizados por
+        setor.
+      </p>
+
+      <!-- Cabeçalho do setor aberto: botão de voltar e título (gerado pelo JavaScript) -->
+      <div id="topo-secao"></div>
+
+      <p
+        id="contador"
+        class="mb-6 font-mono text-sm text-slate-500"
+        aria-live="polite"></p>
+
+      <!-- Cartões de conteúdo (gerados pelo JavaScript) -->
+      <main
+        id="resultados"
+        class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></main>
+
+      <footer
+        class="mt-16 border-t border-emerald-500/10 pt-6 text-sm text-slate-500">
+        <p>
+          Os vídeos, repositórios e sites listados pertencem aos seus autores. O
+          deftsec apenas organiza os links.
+        </p>
+        <p class="mt-1 font-mono">© 2026 Murillo Aparecido</p>
+      </footer>
+    </div>
+
+    <!-- Scripts comuns (sem módulos), na ordem: dados, busca, tela, ponto de entrada.
+       Assim o site funciona abrindo o index.html direto, sem servidor. -->
+    <script src="data/setores.js"></script>
+    <script src="backend/busca.js"></script>
+    <script src="backend/render.js"></script>
+    <script src="backend/main.js"></script>
+  </body>
+</html>
