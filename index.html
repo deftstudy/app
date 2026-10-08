@@ -44,6 +44,8 @@
         class="rounded border border-emerald-500/20 px-3 py-2 text-slate-400 hover:text-emerald-300">
         <i data-lucide="settings" class="h-4 w-4"></i>
       </a>
+      <a href="#salvos" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300">Salvos</a>
+      <a href="https://github.com/deftstudy/app/issues/new?title=Sugest%C3%A3o%20de%20conte%C3%BAdo&body=Nome%20do%20conte%C3%BAdo%3A%0ALink%3A%0ASetor%3A%0ATags%3A" target="_blank" rel="noopener noreferrer" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300">Sugerir conteúdo</a>
     </div>
   </header>
 
@@ -55,10 +57,19 @@
     <!-- Cabeçalho do setor aberto: botão de voltar e título (gerado pelo JavaScript) -->
     <div id="topo-secao"></div>
 
+    <div id="filtros" class="mb-6 flex flex-wrap gap-3" hidden></div>
+
     <p id="contador" class="mb-6 font-mono text-sm text-slate-500" aria-live="polite"></p>
 
     <!-- Cartões de conteúdo (gerados pelo JavaScript) -->
     <main id="resultados" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></main>
+
+    <!-- Favoritos ficam em uma seção própria, abaixo dos setores da página inicial. -->
+    <section id="inicio-salvos" class="mt-16 border-t border-emerald-500/10 pt-8" hidden>
+      <h2 class="mb-4 font-mono text-xl text-emerald-400">Seus conteúdos salvos</h2>
+      <div id="cartoes-salvos" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      <a href="#salvos" class="mt-4 inline-block text-sm text-slate-400 hover:text-emerald-300">Ver todos os salvos →</a>
+    </section>
 
     <footer class="mt-16 border-t border-emerald-500/10 pt-6 text-sm text-slate-500">
       <p>Os vídeos, repositórios e sites listados pertencem aos seus autores. O deftstudy apenas organiza os links.</p>

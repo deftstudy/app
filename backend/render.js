@@ -30,10 +30,12 @@ export function renderSetores(setores) {
     const cartao = criar('a', 'block rounded-lg border border-emerald-500/20 bg-slate-900/60 p-5 hover:border-emerald-400/60');
     cartao.href = `#${setor.id}`;
 
-    const rodape = criar('div', 'mt-4 flex gap-4 font-mono text-xs');
+    const concluidos = progressoVisto().filter((id) => id.startsWith(`${setor.id}:`)).length;
+    const rodape = criar('div', 'mt-4 flex flex-wrap gap-4 font-mono text-xs');
     rodape.append(
       criar('span', 'text-purple-400', `/${setor.id}`),
-      criar('span', 'text-slate-500', `${setor.itens.length} conteúdo(s)`)
+      criar('span', 'text-slate-500', `${setor.itens.length} conteúdo(s)`),
+      criar('span', 'text-emerald-400', `progresso ${concluidos}/${setor.itens.length}`)
     );
 
     cartao.append(
@@ -47,6 +49,13 @@ export function renderSetores(setores) {
 
   lucide.createIcons();
 }
+
+function chave(item) { return `${item.setor}:${item.titulo}`; }
+function carregarEstado() {
+  try { return JSON.parse(localStorage.getItem('deftstudy:progresso')) || { vistos: [], favoritos: [] }; }
+  catch { return { vistos: [], favoritos: [] }; }
+}
+function progressoVisto() { return carregarEstado().vistos; }
 
 // Cabeçalho do setor aberto. Chame com null para limpar.
 export function renderTopoSetor(setor) {
@@ -83,6 +92,17 @@ export function renderResultados(lista, texto) {
   lucide.createIcons();
 }
 
+export function renderErroSetor(id) {
+  const area = document.getElementById('resultados'); area.replaceChildren();
+  area.append(criar('section', 'col-span-full rounded-lg border border-emerald-500/20 bg-slate-900/60 p-5', `Setor #${id} não encontrado.`));
+  const voltar = criar('a', 'col-span-full text-emerald-400', '← Voltar aos setores'); voltar.href = '#'; area.append(voltar);
+}
+
+export function renderSalvos(itens) {
+  renderResultados(itens, '');
+  if (!itens.length) document.getElementById('resultados').firstChild.textContent = 'Você ainda não salvou nenhum conteúdo.';
+}
+
 // Pega o endereço (src) de dentro do código <iframe> colado em setores.js.
 // Só aceita embeds do YouTube; qualquer outra coisa é ignorada por segurança.
 export function extrairSrcYoutube(codigoIframe) {
@@ -115,14 +135,7 @@ export function criarCartao(item) {
   const classes = 'block rounded-lg border border-emerald-500/20 bg-slate-900/60 p-4 hover:border-emerald-400/60';
   const srcVideo = extrairSrcYoutube(item.iframe);
 
-  // Vídeo com iframe: o cartão é uma caixa com o player dentro.
-  // Os outros: o cartão inteiro é um link que abre em outra aba.
-  const cartao = srcVideo ? criar('div', classes) : criar('a', classes);
-  if (!srcVideo) {
-    if (item.url) cartao.href = item.url;
-    cartao.target = '_blank';
-    cartao.rel = 'noopener noreferrer';
-  }
+  const cartao = criar('article', classes);
 
   // Linha de cima: ícone, tipo e setor
   const topo = criar('div', 'mb-3 flex items-center gap-3 font-mono text-xs');
@@ -133,9 +146,24 @@ export function criarCartao(item) {
   );
 
   const tags = criar('div', 'mt-3 flex flex-wrap gap-2 text-xs text-slate-500');
-  (item.tags || []).forEach((tag) => tags.append(criar('span', '', `#${tag}`)));
+  (item.tags || []).forEach((tag) => {
+    const link = criar('button', 'tag-link', `#${tag}`); link.type = 'button'; link.dataset.tag = tag; tags.append(link);
+  });
+
+  const chave = `${item.setor}:${item.titulo}`;
+  let estado = { vistos: [], favoritos: [] };
+  try { estado = JSON.parse(localStorage.getItem('deftstudy:progresso')) || estado; } catch {}
+  const acoes = criar('div', 'mt-3 flex flex-wrap gap-3 text-xs');
+  [['visto', 'Marcar como visto', '✓ Visto'], ['favorito', 'Salvar nos favoritos', '★ Salvo']].forEach(([tipo, label, marcado]) => {
+    const lista = tipo === 'visto' ? estado.vistos : estado.favoritos;
+    const button = criar('button', 'acao-cartao', lista.includes(chave) ? marcado : label);
+    button.type = 'button'; button.dataset.acao = tipo; button.dataset.chave = chave; button.setAttribute('aria-pressed', String(lista.includes(chave))); acoes.append(button);
+  });
 
   if (srcVideo) cartao.append(criarPlayer(srcVideo, item.titulo));
-  cartao.append(topo, criar('h3', 'font-mono text-base text-slate-100', item.titulo), tags);
+  const detalhes = criar('p', 'mt-2 text-xs text-slate-500', `${item.nivel || 'iniciante'} · ${item.idioma || 'pt-BR'}`);
+  const titulo = item.url ? criar('a', 'font-mono text-base text-slate-100 hover:text-emerald-300', item.titulo) : criar('h3', 'font-mono text-base text-slate-100', item.titulo);
+  if (item.url) { titulo.href = item.url; titulo.target = '_blank'; titulo.rel = 'noopener noreferrer'; }
+  cartao.append(topo, titulo, detalhes, tags, acoes);
   return cartao;
 }
