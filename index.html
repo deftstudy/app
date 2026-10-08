@@ -28,9 +28,20 @@
   <main id="tela-login" class="tela-login">
     <section class="cartao-login" aria-labelledby="titulo-login">
       <p class="marca-login">deftstudy<span aria-hidden="true">_</span></p>
-      <h1 id="titulo-login">Continue seus estudos</h1>
-      <p class="descricao-login">Entre para sincronizar seus conteúdos salvos, progresso e configurações.</p>
-      <button id="entrar-google-inicial" class="botao-google" type="button">G&nbsp; Entrar com Google</button>
+      <h1 id="titulo-login">Acesse seus estudos</h1>
+      <p class="descricao-login">Entre ou crie uma conta para sincronizar seus conteúdos salvos, progresso e configurações.</p>
+      <form id="form-email" class="form-login">
+        <label for="email-login">E-mail</label>
+        <input id="email-login" name="email" type="email" autocomplete="email" required placeholder="voce@exemplo.com">
+        <label for="senha-login">Senha</label>
+        <input id="senha-login" name="password" type="password" autocomplete="current-password" minlength="6" required placeholder="Mínimo de 6 caracteres">
+        <div class="acoes-login">
+          <button id="entrar-email" class="botao-primario" type="submit">Entrar</button>
+          <button id="criar-conta" class="botao-secundario" type="button">Criar conta</button>
+        </div>
+      </form>
+      <div class="separador-login"><span>ou</span></div>
+      <button id="entrar-github" class="botao-github" type="button">Entrar com GitHub</button>
       <div class="separador-login"><span>ou</span></div>
       <button id="entrar-visitante" class="botao-visitante" type="button">Entrar como visitante</button>
       <p id="status-login" class="status-login" role="status" aria-live="polite"></p>
@@ -61,7 +72,6 @@
       <a href="#salvos" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300">Salvos</a>
       <a href="https://github.com/deftstudy/app/issues/new?title=Sugest%C3%A3o%20de%20conte%C3%BAdo&body=Nome%20do%20conte%C3%BAdo%3A%0ALink%3A%0ASetor%3A%0ATags%3A" target="_blank" rel="noopener noreferrer" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300">Sugerir conteúdo</a>
       <span id="status-conta" class="text-xs text-slate-500" aria-live="polite"></span>
-      <button id="entrar-google" type="button" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300">Entrar com Google</button>
       <button id="sair-conta" type="button" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300" hidden>Sair</button>
     </div>
   </header>

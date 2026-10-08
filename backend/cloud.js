@@ -11,6 +11,7 @@ const configurado = SUPABASE_URL.startsWith('https://')
 let supabase = null;
 let usuarioAtual = null;
 let temporizadorSalvamento;
+let githubHabilitado = false;
 
 function atualizarAcesso(usuario) {
   let visitante = false;
@@ -37,25 +38,93 @@ function salvarLocalmente(progresso, configuracoes) {
 }
 
 function atualizarBotoes(usuario, aoEntrar) {
-  const entrar = document.getElementById('entrar-google');
-  const entrarInicial = document.getElementById('entrar-google-inicial');
+  const entrar = document.getElementById('entrar-email');
+  const cadastrar = document.getElementById('criar-conta');
+  const github = document.getElementById('entrar-github');
   const sair = document.getElementById('sair-conta');
   const status = document.getElementById('status-conta');
   const statusLogin = document.getElementById('status-login');
-  entrar.hidden = Boolean(usuario);
   entrar.disabled = !configurado;
-  entrar.title = configurado ? '' : 'Configure a URL e a chave pública do Supabase.';
-  entrarInicial.disabled = !configurado;
-  entrarInicial.title = configurado ? '' : 'Login Google ainda não configurado.';
+  cadastrar.disabled = !configurado;
+  github.hidden = !githubHabilitado;
+  github.disabled = !configurado || !githubHabilitado;
   sair.hidden = !usuario;
-  status.textContent = usuario ? `Conectado: ${usuario.email || 'conta Google'}` : '';
-  statusLogin.textContent = usuario ? '' : (configurado ? '' : 'Login Google ainda não configurado. Você pode entrar como visitante.');
-  entrar.onclick = aoEntrar;
-  entrarInicial.onclick = aoEntrar;
+  status.textContent = usuario ? `Conectado: ${usuario.email || 'conta'}` : '';
+  if (!configurado) statusLogin.textContent = 'Login indisponível: configure a URL e a chave pública do Supabase. Você ainda pode entrar como visitante.';
   sair.onclick = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) status.textContent = `Erro ao sair: ${error.message}`;
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) status.textContent = `Erro ao sair: ${error.message}`;
+    } catch (error) {
+      status.textContent = `Erro ao sair: ${mostrarErroLogin(error)}`;
+    }
   };
+}
+
+function mostrarErroLogin(erro) {
+  const mensagem = (erro?.message || '').toLowerCase();
+  if (mensagem.includes('invalid login credentials')) return 'E-mail ou senha incorretos.';
+  if (mensagem.includes('email not confirmed')) return 'Confirme seu e-mail pelo link enviado para sua caixa de entrada.';
+  if (mensagem.includes('user already registered')) return 'Este e-mail já tem uma conta. Tente entrar.';
+  if (mensagem.includes('provider is not enabled') || mensagem.includes('unsupported provider')) return 'O login GitHub ainda não foi habilitado nos provedores do Supabase.';
+  return erro?.message || 'Não foi possível concluir o acesso.';
+}
+
+function urlAtual() {
+  return `${window.location.origin}${window.location.pathname}`;
+}
+
+async function entrarComEmail() {
+  const email = document.getElementById('email-login').value.trim();
+  const password = document.getElementById('senha-login').value;
+  const status = document.getElementById('status-login');
+  status.textContent = 'Verificando seus dados…';
+  try {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    status.textContent = error ? mostrarErroLogin(error) : '';
+  } catch (error) {
+    status.textContent = mostrarErroLogin(error);
+  }
+}
+
+async function criarContaEmail() {
+  const email = document.getElementById('email-login').value.trim();
+  const password = document.getElementById('senha-login').value;
+  if (!document.getElementById('form-email').reportValidity()) return;
+  if (password.length < 6) {
+    document.getElementById('status-login').textContent = 'A senha precisa ter pelo menos 6 caracteres.';
+    return;
+  }
+
+  const status = document.getElementById('status-login');
+  status.textContent = 'Criando sua conta…';
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: urlAtual() },
+    });
+    if (error) {
+      status.textContent = mostrarErroLogin(error);
+      return;
+    }
+    if (!data.session) status.textContent = 'Conta criada. Confira seu e-mail e confirme o cadastro para entrar.';
+    else status.textContent = '';
+  } catch (error) {
+    status.textContent = mostrarErroLogin(error);
+  }
+}
+
+async function entrarComGithub() {
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: { redirectTo: urlAtual() },
+    });
+    if (error) document.getElementById('status-login').textContent = mostrarErroLogin(error);
+  } catch (error) {
+    document.getElementById('status-login').textContent = mostrarErroLogin(error);
+  }
 }
 
 async function salvarNaNuvem() {
@@ -84,7 +153,7 @@ export function agendarSalvamentoNuvem() {
 async function carregarDadosUsuario(usuario, aoAtualizar) {
   usuarioAtual = usuario;
   atualizarAcesso(usuario);
-  atualizarBotoes(usuario, entrarComGoogle);
+  atualizarBotoes(usuario);
   if (!usuario) {
     aoAtualizar();
     return;
@@ -119,28 +188,13 @@ async function carregarDadosUsuario(usuario, aoAtualizar) {
   await salvarNaNuvem();
 }
 
-async function entrarComGoogle() {
-  if (!supabase) {
-    document.getElementById('status-login').textContent = 'O serviço de login ainda não está disponível.';
-    return;
-  }
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: `${window.location.origin}${window.location.pathname}` },
-  });
-  if (error) {
-    document.getElementById('status-conta').textContent = `Erro no login: ${error.message}`;
-    document.getElementById('status-login').textContent = `Erro no login: ${error.message}`;
-  }
-}
-
 export async function iniciarNuvem(aoAtualizar) {
   document.getElementById('entrar-visitante').addEventListener('click', () => {
     try { sessionStorage.setItem(CHAVE_VISITANTE, 'sim'); } catch {}
     atualizarAcesso(null);
   });
   atualizarAcesso(null);
-  atualizarBotoes(null, () => {});
+  atualizarBotoes(null);
   if (!configurado) return;
 
   try {
@@ -148,18 +202,43 @@ export async function iniciarNuvem(aoAtualizar) {
     const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.117.3');
     supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
   } catch (error) {
-    document.getElementById('entrar-google').disabled = true;
-    document.getElementById('entrar-google-inicial').disabled = true;
+    document.getElementById('entrar-email').disabled = true;
+    document.getElementById('criar-conta').disabled = true;
     document.getElementById('status-login').textContent = 'Não foi possível carregar o serviço de login. Você pode entrar como visitante.';
     document.getElementById('status-conta').textContent = 'Não foi possível carregar o SDK do Supabase.';
     console.error('Falha ao carregar o SDK do Supabase:', error);
     return;
   }
-  atualizarBotoes(null, entrarComGoogle);
+  atualizarBotoes(null);
+  document.getElementById('form-email').addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+    const submit = document.getElementById('entrar-email');
+    submit.disabled = true;
+    await entrarComEmail();
+    submit.disabled = false;
+  });
+  document.getElementById('criar-conta').addEventListener('click', async () => {
+    const botao = document.getElementById('criar-conta');
+    botao.disabled = true;
+    await criarContaEmail();
+    botao.disabled = false;
+  });
+  document.getElementById('entrar-github').addEventListener('click', entrarComGithub);
   supabase.auth.onAuthStateChange((_evento, sessao) => {
     queueMicrotask(() => carregarDadosUsuario(sessao?.user || null, aoAtualizar));
   });
 
+  try {
+    const resposta = await fetch(`${SUPABASE_URL}/auth/v1/settings`, {
+      headers: { apikey: SUPABASE_PUBLISHABLE_KEY },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (resposta.ok) {
+      const configuracoesAuth = await resposta.json();
+      githubHabilitado = configuracoesAuth.external?.github === true;
+    }
+  } catch {}
+  atualizarBotoes(null);
   const { data, error } = await supabase.auth.getSession();
   if (error) {
     document.getElementById('status-conta').textContent = `Erro ao verificar login: ${error.message}`;

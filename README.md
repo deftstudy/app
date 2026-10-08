@@ -6,16 +6,17 @@ Plataforma de estudos de programação: links de vídeos, repositórios e sites 
 
 Gere o CSS uma vez (veja a seção abaixo) e abra o `index.html` no navegador. Não precisa de servidor.
 
-## Login Google e sincronização Supabase
+## Login e sincronização Supabase
 
 O login requer servir o site por HTTP/HTTPS (por exemplo, Live Server) e configurar um projeto Supabase:
 
 1. Instale as dependências com `npm install`.
 2. No arquivo `backend/supabase-config.js`, informe a Project URL e a Publishable key (`sb_publishable_...`) do projeto. Essa chave é pública para uso no navegador; nunca use a chave `secret` ou `service_role` no frontend.
 3. No SQL Editor do Supabase, execute [`supabase/schema.sql`](supabase/schema.sql). A tabela guarda progresso e configurações; políticas RLS restringem cada linha ao respectivo usuário autenticado.
-4. Em **Authentication → Sign In / Providers**, habilite Google e informe o OAuth Client ID e Client Secret obtidos no Google Cloud.
-5. Nas configurações de URL do Supabase Auth, defina a URL do site e permita as URLs de retorno usadas no desenvolvimento e na produção (por exemplo, `http://localhost:5500` e a URL publicada). No cliente OAuth do Google, cadastre a origem do site e o callback mostrado pelo Supabase.
-6. Abra o site servido por HTTP/HTTPS e use **Entrar com Google**.
+4. Em **Authentication → Sign In / Providers**, deixe **Email** habilitado. A confirmação por e-mail pode ser exigida; nesse caso, configure o envio de e-mails no Supabase para produção.
+5. Cadastre a URL publicada do app e a URL local de desenvolvimento em **Authentication → URL Configuration → Redirect URLs**.
+6. Para habilitar GitHub opcionalmente, crie um OAuth App em **GitHub → Settings → Developer settings → OAuth Apps**. Use a URL do site como Homepage URL e `https://SEU-PROJETO.supabase.co/auth/v1/callback` como Authorization callback URL. Copie o Client ID e o Client Secret para **Authentication → Sign In / Providers → GitHub** no Supabase. Não coloque o Client Secret no repositório.
+7. Abra o site servido por HTTP/HTTPS e entre ou crie uma conta com e-mail e senha. O botão GitHub aparece na mesma tela.
 
 Favoritos, conteúdos vistos e configurações existentes no navegador são mesclados com a conta na primeira autenticação. Depois disso, alterações são salvas no Supabase e carregadas ao entrar novamente. Visitantes continuam usando o armazenamento local.
 
