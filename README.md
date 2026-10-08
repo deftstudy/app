@@ -6,6 +6,19 @@ Plataforma de estudos de programação: links de vídeos, repositórios e sites 
 
 Gere o CSS uma vez (veja a seção abaixo) e abra o `index.html` no navegador. Não precisa de servidor.
 
+## Login Google e sincronização Supabase
+
+O login requer servir o site por HTTP/HTTPS (por exemplo, Live Server) e configurar um projeto Supabase:
+
+1. Instale as dependências com `npm install`.
+2. No arquivo `backend/supabase-config.js`, informe a Project URL e a Publishable key (`sb_publishable_...`) do projeto. Essa chave é pública para uso no navegador; nunca use a chave `secret` ou `service_role` no frontend.
+3. No SQL Editor do Supabase, execute [`supabase/schema.sql`](supabase/schema.sql). A tabela guarda progresso e configurações; políticas RLS restringem cada linha ao respectivo usuário autenticado.
+4. Em **Authentication → Sign In / Providers**, habilite Google e informe o OAuth Client ID e Client Secret obtidos no Google Cloud.
+5. Nas configurações de URL do Supabase Auth, defina a URL do site e permita as URLs de retorno usadas no desenvolvimento e na produção (por exemplo, `http://localhost:5500` e a URL publicada). No cliente OAuth do Google, cadastre a origem do site e o callback mostrado pelo Supabase.
+6. Abra o site servido por HTTP/HTTPS e use **Entrar com Google**.
+
+Favoritos, conteúdos vistos e configurações existentes no navegador são mesclados com a conta na primeira autenticação. Depois disso, alterações são salvas no Supabase e carregadas ao entrar novamente. Visitantes continuam usando o armazenamento local.
+
 ## Tailwind CSS (gerar o CSS)
 
 O visual usa Tailwind. O arquivo `css/tailwind.css` é gerado pelo Tailwind CLI e precisa ir junto no commit para o GitHub Pages funcionar.

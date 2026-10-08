@@ -4,6 +4,7 @@
 // É um módulo ES: importa o que usa e exporta o que o main.js chama.
 
 import { criar } from './render.js';
+import { agendarSalvamentoNuvem } from './cloud.js';
 
 const CHAVE_CONFIG = 'deftstudy:config'; // nome usado para salvar no navegador (localStorage)
 const CAMINHO_ONEKO = 'assets/oneko/';   // pasta com oneko.js e oneko.gif
@@ -48,7 +49,12 @@ function salvarConfig(config) {
   }
 }
 
-const configAtual = lerConfig();
+let configAtual = lerConfig();
+
+export function atualizarConfiguracoesLocais() {
+  configAtual = lerConfig();
+  iniciarConfiguracoes();
+}
 
 // Chame uma vez ao abrir o site, para aplicar o que a pessoa já tinha escolhido
 export function iniciarConfiguracoes() {
@@ -104,6 +110,7 @@ function criarLinha(opcao) {
   caixa.addEventListener('change', () => {
     configAtual[opcao.id] = caixa.checked;
     salvarConfig(configAtual);
+    agendarSalvamentoNuvem();
     opcao.aplicar(caixa.checked);
   });
 

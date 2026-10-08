@@ -5,6 +5,93 @@ body {
   background-size: 24px 24px;
 }
 
+.tela-login {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.cartao-login {
+  width: min(100%, 27rem);
+  padding: 2.5rem;
+  border: 1px solid rgba(52, 211, 153, .22);
+  border-radius: 1rem;
+  background: rgba(2, 6, 23, .94);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .35);
+}
+
+.marca-login {
+  margin-bottom: 2rem;
+  color: #34d399;
+  font: 700 1.25rem "JetBrains Mono", monospace;
+}
+
+.marca-login span { animation: piscar 1s steps(1) infinite; }
+
+.cartao-login h1 {
+  color: #f1f5f9;
+  font: 700 1.75rem/1.2 "JetBrains Mono", monospace;
+}
+
+.descricao-login {
+  margin: .75rem 0 1.75rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.botao-google,
+.botao-visitante {
+  width: 100%;
+  min-height: 3rem;
+  border-radius: .5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border-color .16s ease, background-color .16s ease;
+}
+
+.botao-google {
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.botao-google:hover:not(:disabled) { background: #e2e8f0; }
+.botao-google:disabled { cursor: not-allowed; opacity: .55; }
+
+.separador-login {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.25rem 0;
+  color: #64748b;
+  font-size: .8rem;
+}
+
+.separador-login::before,
+.separador-login::after {
+  height: 1px;
+  flex: 1;
+  background: rgba(52, 211, 153, .16);
+  content: "";
+}
+
+.botao-visitante {
+  border: 1px solid rgba(52, 211, 153, .3);
+  color: #a7f3d0;
+  background: rgba(15, 23, 42, .75);
+}
+
+.botao-visitante:hover { border-color: #34d399; background: rgba(6, 78, 59, .3); }
+
+.status-login {
+  min-height: 1.25rem;
+  margin-top: 1rem;
+  color: #fbbf24;
+  font-size: .8rem;
+  text-align: center;
+}
+
 /* O cursor "_" do título pisca. É o único movimento da página. */
 .cursor {
   animation: piscar 1s steps(1) infinite;

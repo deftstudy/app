@@ -1,7 +1,8 @@
 import { SETORES } from '../data/setores.js';
 import { filtrar } from './busca.js';
 import { renderSetores, renderTopoSetor, renderResultados, renderErroSetor, renderSalvos, criarCartao } from './render.js';
-import { iniciarConfiguracoes, renderConfiguracoes } from './configuracoes.js';
+import { iniciarConfiguracoes, renderConfiguracoes, atualizarConfiguracoesLocais } from './configuracoes.js';
+import { agendarSalvamentoNuvem, iniciarNuvem } from './cloud.js';
 
 const ITENS = SETORES.flatMap((setor) => setor.itens.map((item) => ({
   ...item,
@@ -96,6 +97,7 @@ document.addEventListener('click', (evento) => {
     const index = lista.indexOf(acao.dataset.chave);
     if (index >= 0) lista.splice(index, 1); else lista.push(acao.dataset.chave);
     try { localStorage.setItem('deftstudy:progresso', JSON.stringify(estado)); } catch {}
+    agendarSalvamentoNuvem();
     atualizar();
   }
 });
@@ -125,3 +127,7 @@ document.addEventListener('keydown', (evento) => {
   }
 });
 iniciarConfiguracoes(); atualizar();
+iniciarNuvem(() => {
+  atualizarConfiguracoesLocais();
+  atualizar();
+});
