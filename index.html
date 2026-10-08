@@ -25,6 +25,31 @@
 
 <body class="min-h-screen bg-slate-950 font-sans text-slate-300">
 
+  <main id="tela-login" class="tela-login">
+    <section class="cartao-login" aria-labelledby="titulo-login">
+      <p class="marca-login">deftstudy<span aria-hidden="true">_</span></p>
+      <h1 id="titulo-login">Acesse seus estudos</h1>
+      <p class="descricao-login">Entre ou crie uma conta para sincronizar seus conteúdos salvos, progresso e configurações.</p>
+      <form id="form-email" class="form-login">
+        <label for="email-login">E-mail</label>
+        <input id="email-login" name="email" type="email" autocomplete="email" required placeholder="voce@exemplo.com">
+        <label for="senha-login">Senha</label>
+        <input id="senha-login" name="password" type="password" autocomplete="current-password" minlength="6" required placeholder="Mínimo de 6 caracteres">
+        <div class="acoes-login">
+          <button id="entrar-email" class="botao-primario" type="submit">Entrar</button>
+          <button id="criar-conta" class="botao-secundario" type="button">Criar conta</button>
+        </div>
+      </form>
+      <div class="separador-login"><span>ou</span></div>
+      <button id="entrar-github" class="botao-github" type="button">Entrar com GitHub</button>
+      <div class="separador-login"><span>ou</span></div>
+      <button id="entrar-visitante" class="botao-visitante" type="button">Entrar como visitante</button>
+      <p id="status-login" class="status-login" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <div id="site-app" hidden>
+
   <!-- Barra do topo: marca + busca em estilo terminal. Fica fixa ao rolar a página. -->
   <header class="sticky top-0 z-10 border-b border-emerald-500/20 bg-slate-950/90 backdrop-blur">
     <div class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3">
@@ -46,6 +71,8 @@
       </a>
       <a href="#salvos" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300">Salvos</a>
       <a href="https://github.com/deftstudy/app/issues/new?title=Sugest%C3%A3o%20de%20conte%C3%BAdo&body=Nome%20do%20conte%C3%BAdo%3A%0ALink%3A%0ASetor%3A%0ATags%3A" target="_blank" rel="noopener noreferrer" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300">Sugerir conteúdo</a>
+      <span id="status-conta" class="text-xs text-slate-500" aria-live="polite"></span>
+      <button id="sair-conta" type="button" class="rounded border border-emerald-500/20 px-3 py-2 text-sm text-slate-400 hover:text-emerald-300" hidden>Sair</button>
     </div>
   </header>
 
@@ -75,6 +102,8 @@
       <p>Os vídeos, repositórios e sites listados pertencem aos seus autores. O deftstudy apenas organiza os links.</p>
       <p class="mt-1 font-mono">© 2026 Murillo Aparecido</p>
     </footer>
+  </div>
+
   </div>
 
   <!-- O app agora é organizado em módulos ES e entra por um único ponto de entrada. -->
