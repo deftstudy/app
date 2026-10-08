@@ -67,11 +67,17 @@ body {
 .botao-secundario,
 .botao-github,
 .botao-visitante {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 3rem;
+  padding: .75rem 1rem;
   border-radius: .5rem;
   cursor: pointer;
   font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
   transition: border-color .16s ease, background-color .16s ease;
 }
 

@@ -12,6 +12,7 @@ let supabase = null;
 let usuarioAtual = null;
 let temporizadorSalvamento;
 let githubHabilitado = false;
+let clientePronto = false;
 
 function atualizarAcesso(usuario) {
   let visitante = false;
@@ -37,20 +38,22 @@ function salvarLocalmente(progresso, configuracoes) {
   localStorage.setItem(CHAVE_CONFIG, JSON.stringify(configuracoes));
 }
 
-function atualizarBotoes(usuario, aoEntrar) {
+function atualizarBotoes(usuario) {
   const entrar = document.getElementById('entrar-email');
   const cadastrar = document.getElementById('criar-conta');
   const github = document.getElementById('entrar-github');
   const sair = document.getElementById('sair-conta');
   const status = document.getElementById('status-conta');
   const statusLogin = document.getElementById('status-login');
-  entrar.disabled = !configurado;
-  cadastrar.disabled = !configurado;
+  entrar.disabled = !configurado || !clientePronto;
+  cadastrar.disabled = !configurado || !clientePronto;
   github.hidden = !githubHabilitado;
-  github.disabled = !configurado || !githubHabilitado;
+  github.disabled = !configurado || !clientePronto || !githubHabilitado;
   sair.hidden = !usuario;
   status.textContent = usuario ? `Conectado: ${usuario.email || 'conta'}` : '';
   if (!configurado) statusLogin.textContent = 'Login indisponível: configure a URL e a chave pública do Supabase. Você ainda pode entrar como visitante.';
+  else if (!clientePronto && !usuario) statusLogin.textContent = 'Conectando ao serviço de login…';
+  else statusLogin.textContent = '';
   sair.onclick = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -209,6 +212,7 @@ export async function iniciarNuvem(aoAtualizar) {
     console.error('Falha ao carregar o SDK do Supabase:', error);
     return;
   }
+  clientePronto = true;
   atualizarBotoes(null);
   document.getElementById('form-email').addEventListener('submit', async (evento) => {
     evento.preventDefault();
